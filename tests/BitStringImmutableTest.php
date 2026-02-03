@@ -293,4 +293,49 @@ class BitStringImmutableTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $a->and($b);
     }
+
+    public function testExtractImmutable(): void
+    {
+        $bits = BitStringImmutable::fromString('10110101');
+        $result = $bits->extract(2, 4);
+
+        $this->assertInstanceOf(BitStringImmutable::class, $result);
+        $this->assertEquals('1101', $result->toString());
+    }
+
+    public function testSliceImmutable(): void
+    {
+        $bits = BitStringImmutable::fromString('10110101');
+        $result = $bits->slice(2, 6);
+
+        $this->assertInstanceOf(BitStringImmutable::class, $result);
+        $this->assertEquals('1101', $result->toString());
+    }
+
+    public function testFirstImmutable(): void
+    {
+        $bits = BitStringImmutable::fromString('10110101');
+        $result = $bits->first(3);
+
+        $this->assertInstanceOf(BitStringImmutable::class, $result);
+        $this->assertEquals('101', $result->toString());
+    }
+
+    public function testLastImmutable(): void
+    {
+        $bits = BitStringImmutable::fromString('10110101');
+        $result = $bits->last(3);
+
+        $this->assertInstanceOf(BitStringImmutable::class, $result);
+        $this->assertEquals('101', $result->toString());
+    }
+
+    public function testCodewordImmutable(): void
+    {
+        $bits = BitStringImmutable::fromString('10110101');
+        $result = $bits->codeword(0, 4);
+
+        $this->assertInstanceOf(BitStringImmutable::class, $result);
+        $this->assertEquals('1011', $result->toString());
+    }
 }

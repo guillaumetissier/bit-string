@@ -63,15 +63,6 @@ class BinaryConverterTest extends TestCase
         $converter->toBitString('102');
     }
 
-    public function testEmptyString(): void
-    {
-        $converter = new BinaryConverter();
-
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Binary string cannot be empty');
-        $converter->toBitString('');
-    }
-
     public function testRoundTrip(): void
     {
         $converter = new BinaryConverter();

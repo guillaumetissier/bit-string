@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2026-02-03
+
+### Added
+- Extraction methods in `AbstractBitString`: `extract()`, `slice()`, `first()`, `last()`, `codeword()`
+- `empty()` factory method to create an empty BitString
+- `AbstractBitString` as shared base class for `BitString` and `BitStringImmutable`
+
+### Changed
+- `BitString` and `BitStringImmutable` now extend `AbstractBitString`
+- `zeros()` and `ones()` now accept `0` as length parameter
+- `validate()` no longer rejects empty bit strings
+
 ## [1.0.0] - 2026-02-02
 
 ### Added

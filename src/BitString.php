@@ -4,50 +4,45 @@ declare(strict_types=1);
 
 namespace Guillaumetissier\BitString;
 
+use InvalidArgumentException;
+
 /**
  * Mutable representation of a string of bits (0s and 1s).
  */
-final class BitString implements BitStringInterface
+final class BitString extends AbstractBitString
 {
-    /**
-     * @param string $bits Binary string (e.g., "10110101")
-     */
-    private function __construct(
-        private string $bits,
-    ) {
-        $this->validate();
-    }
-
     /**
      * Create a BitString from a binary string.
      *
      * @param string $binary Binary string (e.g., "10110101")
-     *
-     * @throws \InvalidArgumentException If the string contains non-binary characters
+     * @return static
+     * @throws InvalidArgumentException If the string contains non-binary characters
      */
-    public static function fromString(string $binary): self
+    public static function fromString(string $binary): static
     {
-        if ('' === $binary) {
-            throw new \InvalidArgumentException('Binary string cannot be empty');
-        }
+        return new BitString($binary);
+    }
 
-        if (!preg_match('/^[01]+$/', $binary)) {
-            throw new \InvalidArgumentException('Binary string must contain only 0 and 1');
-        }
-
-        return new self($binary);
+    /**
+     * Create an empty BitString.
+     *
+     * @return self
+     */
+    public static function empty(): self
+    {
+        return new self('');
     }
 
     /**
      * Create a BitString with all bits set to 0.
      *
      * @param int $length Number of bits
+     * @return self
+     * @throws InvalidArgumentException If length is negative
      */
     public static function zeros(int $length): self
     {
-        if ($length < 1) {
-            throw new \InvalidArgumentException('Length must be at least 1');
-        }
+        self::assertValidLength($length);
 
         return new self(str_repeat('0', $length));
     }
@@ -56,42 +51,14 @@ final class BitString implements BitStringInterface
      * Create a BitString with all bits set to 1.
      *
      * @param int $length Number of bits
+     * @return self
+     * @throws InvalidArgumentException If length is negative
      */
     public static function ones(int $length): self
     {
-        if ($length < 1) {
-            throw new \InvalidArgumentException('Length must be at least 1');
-        }
+        self::assertValidLength($length);
 
         return new self(str_repeat('1', $length));
-    }
-
-    /**
-     * Get the internal binary string representation.
-     *
-     * @internal Used by converters
-     */
-    public function toString(): string
-    {
-        return $this->bits;
-    }
-
-    /**
-     * Get the bit at the specified index.
-     *
-     * @param int $index Zero-based index
-     *
-     * @return int 0 or 1
-     *
-     * @throws \OutOfBoundsException If index is out of bounds
-     */
-    public function get(int $index): int
-    {
-        if ($index < 0 || $index >= strlen($this->bits)) {
-            throw new \OutOfBoundsException('Index out of bounds');
-        }
-
-        return (int) $this->bits[$index];
     }
 
     /**
@@ -103,7 +70,7 @@ final class BitString implements BitStringInterface
      * @return self Returns $this for chaining
      *
      * @throws \OutOfBoundsException     If index is out of bounds
-     * @throws \InvalidArgumentException If value is not 0 or 1
+     * @throws InvalidArgumentException If value is not 0 or 1
      */
     public function set(int $index, int $value): self
     {
@@ -112,7 +79,7 @@ final class BitString implements BitStringInterface
         }
 
         if (0 !== $value && 1 !== $value) {
-            throw new \InvalidArgumentException('Value must be 0 or 1');
+            throw new InvalidArgumentException('Value must be 0 or 1');
         }
 
         $this->bits[$index] = (string) $value;
@@ -133,27 +100,11 @@ final class BitString implements BitStringInterface
     }
 
     /**
-     * Get the length (number of bits).
-     */
-    public function length(): int
-    {
-        return strlen($this->bits);
-    }
-
-    /**
-     * Get the number of bits (alias for length()).
-     */
-    public function bitCount(): int
-    {
-        return strlen($this->bits);
-    }
-
-    /**
      * Perform bitwise AND operation (mutates the instance).
      *
      * @return self Returns $this for chaining
      *
-     * @throws \InvalidArgumentException If bit strings have different lengths
+     * @throws InvalidArgumentException If bit strings have different lengths
      */
     public function and(BitStringInterface $other): self
     {
@@ -176,7 +127,7 @@ final class BitString implements BitStringInterface
      *
      * @return self Returns $this for chaining
      *
-     * @throws \InvalidArgumentException If bit strings have different lengths
+     * @throws InvalidArgumentException If bit strings have different lengths
      */
     public function or(BitStringInterface $other): self
     {
@@ -199,7 +150,7 @@ final class BitString implements BitStringInterface
      *
      * @return self Returns $this for chaining
      *
-     * @throws \InvalidArgumentException If bit strings have different lengths
+     * @throws InvalidArgumentException If bit strings have different lengths
      */
     public function xor(BitStringInterface $other): self
     {
@@ -314,14 +265,6 @@ final class BitString implements BitStringInterface
     }
 
     /**
-     * Count the number of 1 bits (population count).
-     */
-    public function popCount(): int
-    {
-        return substr_count($this->bits, '1');
-    }
-
-    /**
      * Prepend another BitString to the beginning (mutates the instance).
      *
      * @param BitStringInterface $other BitString to prepend
@@ -347,45 +290,5 @@ final class BitString implements BitStringInterface
         $this->bits .= $other->toString();
 
         return $this;
-    }
-
-    /**
-     * Check if this BitString equals another.
-     */
-    public function equals(BitStringInterface $other): bool
-    {
-        return $this->bits === $other->toString();
-    }
-
-    /**
-     * Convert to string representation.
-     */
-    public function __toString(): string
-    {
-        return $this->bits;
-    }
-
-    /**
-     * Validate that all characters are 0 or 1.
-     *
-     * @throws \InvalidArgumentException
-     */
-    private function validate(): void
-    {
-        if (!preg_match('/^[01]+$/', $this->bits)) {
-            throw new \InvalidArgumentException('All bits must be 0 or 1');
-        }
-    }
-
-    /**
-     * Assert that another BitString has the same length.
-     *
-     * @throws \InvalidArgumentException
-     */
-    private function assertSameLength(BitStringInterface $other): void
-    {
-        if (strlen($this->bits) !== $other->length()) {
-            throw new \InvalidArgumentException('Bit strings must have the same length');
-        }
     }
 }

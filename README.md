@@ -7,7 +7,6 @@ A PHP library for manipulating bit strings with both mutable and immutable imple
 - **Two implementations**: Mutable (`BitString`) and Immutable (`BitStringImmutable`)
 - **Flexible conversion system**: Pluggable converters for different formats
 - **Bitwise operations**: AND, OR, XOR, NOT, shifts, rotations
-- **Memory-efficient**: String-based implementation
 - **Type-safe**: Full type hints and strict typing
 - **Well-tested**: Comprehensive test suite
 
@@ -31,6 +30,7 @@ $mutable = BitString::fromString('10110101');
 $immutable = BitStringImmutable::fromString('10110101');
 
 // Factory methods
+$empty = BitSt:empty();                 // ''
 $zeros = BitString::zeros(8);           // '00000000'
 $ones = BitStringImmutable::ones(8);    // '11111111'
 ```
@@ -147,6 +147,30 @@ $bits->shiftRight(2);       // '00101101'
 $bits->rotateLeft(2);       // '11010110'
 $bits->rotateRight(2);      // '01101101'
 ```
+
+### Extraction
+```php
+$bits = BitString::fromString('10110101');
+
+// Extract N bits from a position
+$bits->extract(2, 4);                   // '1101'
+
+// Slice an interval [start, end)
+$bits->slice(2, 6);                     // '1101'
+
+// First / last N bits
+$bits->first(3);                        // '101'
+$bits->last(3);                         // '101'
+
+// Single codeword at index
+$bits->codeword(0, 4);                  // '1011'
+$bits->codeword(1, 4);                  // '0101'
+
+// Extraction is composable — extract then split
+$bits->slice(2, 6)->first(2);           // '11'
+```
+
+All extraction methods return the same type as the source (`BitString` or `BitStringImmutable`), and work identically on both implementations.
 
 ## When to Use Mutable vs Immutable
 

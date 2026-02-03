@@ -139,14 +139,6 @@ class CodewordConverterTest extends TestCase
         $converter->fromBitString($bits);
     }
 
-    public function testEmptyArray(): void
-    {
-        $converter = new CodewordConverter();
-
-        $this->expectException(\InvalidArgumentException::class);
-        $converter->toBitString([]);
-    }
-
     public function testRoundTrip(): void
     {
         $converter = new CodewordConverter();

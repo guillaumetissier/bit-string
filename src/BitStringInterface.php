@@ -115,7 +115,7 @@ interface BitStringInterface
     public function rotateRight(int $positions): self;
 
     /**
-     * Count the number of 1 bits (population count).
+     * Count the number of 1 bit (population count).
      */
     public function popCount(): int;
 
@@ -144,6 +144,61 @@ interface BitStringInterface
      * Get the internal binary string representation.
      */
     public function toString(): string;
+
+    // Extraction methods
+
+    /**
+     * Extract a sub-sequence of bits starting at a given position.
+     *
+     * @param int $position Starting position (zero-based)
+     * @param int $length   Number of bits to extract
+     *
+     * @throws \OutOfBoundsException     If position or length is out of bounds
+     * @throws \InvalidArgumentException If length is less than 1
+     */
+    public function extract(int $position, int $length): self;
+
+    /**
+     * Extract a sub-sequence of bits within an interval [start, end).
+     *
+     * @param int $start Start index (inclusive, zero-based)
+     * @param int $end   End index (exclusive)
+     *
+     * @throws \OutOfBoundsException     If start or end is out of bounds
+     * @throws \InvalidArgumentException If start >= end
+     */
+    public function slice(int $start, int $end): self;
+
+    /**
+     * Extract the first N bits.
+     *
+     * @param int $length Number of bits to extract from the beginning
+     *
+     * @throws \OutOfBoundsException     If length exceeds bit string length
+     * @throws \InvalidArgumentException If length is less than 1
+     */
+    public function first(int $length): self;
+
+    /**
+     * Extract the last N bits.
+     *
+     * @param int $length Number of bits to extract from the end
+     *
+     * @throws \OutOfBoundsException     If length exceeds bit string length
+     * @throws \InvalidArgumentException If length is less than 1
+     */
+    public function last(int $length): self;
+
+    /**
+     * Extract a codeword at a given index.
+     *
+     * @param int $index      Codeword index (zero-based)
+     * @param int $wordLength Length of each codeword in bits
+     *
+     * @throws \InvalidArgumentException If wordLength is less than 1
+     * @throws \OutOfBoundsException     If the codeword index is out of bounds
+     */
+    public function codeword(int $index, int $wordLength): self;
 
     /**
      * Convert to string representation (binary format).
