@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Guillaumetissier\BitString;
 
-use InvalidArgumentException;
-use OutOfBoundsException;
-
 /**
  * Immutable representation of a string of bits (0s and 1s).
  */
@@ -16,8 +13,8 @@ final class BitStringImmutable extends AbstractBitString
      * Create a BitString from a binary string.
      *
      * @param string $binary Binary string (e.g., "10110101")
-     * @return static
-     * @throws InvalidArgumentException If the string contains non-binary characters
+     *
+     * @throws \InvalidArgumentException If the string contains non-binary characters
      */
     public static function fromString(string $binary): static
     {
@@ -26,8 +23,6 @@ final class BitStringImmutable extends AbstractBitString
 
     /**
      * Create an empty BitString.
-     *
-     * @return self
      */
     public static function empty(): self
     {
@@ -38,8 +33,8 @@ final class BitStringImmutable extends AbstractBitString
      * Create a BitString with all bits set to 0.
      *
      * @param int $length Number of bits
-     * @return self
-     * @throws InvalidArgumentException If length is negative
+     *
+     * @throws \InvalidArgumentException If length is negative
      */
     public static function zeros(int $length): self
     {
@@ -52,8 +47,8 @@ final class BitStringImmutable extends AbstractBitString
      * Create a BitString with all bits set to 1.
      *
      * @param int $length Number of bits
-     * @return self
-     * @throws InvalidArgumentException If length is negative
+     *
+     * @throws \InvalidArgumentException If length is negative
      */
     public static function ones(int $length): self
     {
@@ -61,6 +56,7 @@ final class BitStringImmutable extends AbstractBitString
 
         return new self(str_repeat('1', $length));
     }
+
     /**
      * Set the bit at the specified index.
      *
@@ -69,17 +65,17 @@ final class BitStringImmutable extends AbstractBitString
      *
      * @return self New instance
      *
-     * @throws OutOfBoundsException     If index is out of bounds
-     * @throws InvalidArgumentException If value is not 0 or 1
+     * @throws \OutOfBoundsException     If index is out of bounds
+     * @throws \InvalidArgumentException If value is not 0 or 1
      */
     public function set(int $index, int $value): self
     {
         if ($index < 0 || $index >= strlen($this->bits)) {
-            throw new OutOfBoundsException('Index out of bounds');
+            throw new \OutOfBoundsException('Index out of bounds');
         }
 
         if (0 !== $value && 1 !== $value) {
-            throw new InvalidArgumentException('Value must be 0 or 1');
+            throw new \InvalidArgumentException('Value must be 0 or 1');
         }
 
         $newBits = $this->bits;
@@ -105,7 +101,7 @@ final class BitStringImmutable extends AbstractBitString
      *
      * @return self New instance
      *
-     * @throws InvalidArgumentException If bit strings have different lengths
+     * @throws \InvalidArgumentException If bit strings have different lengths
      */
     public function and(BitStringInterface $other): self
     {
@@ -126,7 +122,7 @@ final class BitStringImmutable extends AbstractBitString
      *
      * @return self New instance
      *
-     * @throws InvalidArgumentException If bit strings have different lengths
+     * @throws \InvalidArgumentException If bit strings have different lengths
      */
     public function or(BitStringInterface $other): self
     {
@@ -147,7 +143,7 @@ final class BitStringImmutable extends AbstractBitString
      *
      * @return self New instance
      *
-     * @throws InvalidArgumentException If bit strings have different lengths
+     * @throws \InvalidArgumentException If bit strings have different lengths
      */
     public function xor(BitStringInterface $other): self
     {
@@ -252,24 +248,32 @@ final class BitStringImmutable extends AbstractBitString
     /**
      * Prepend another BitString to the beginning.
      *
-     * @param BitStringInterface $other BitString to prepend
+     * @param BitStringInterface|string $other BitString or string to prepend
      *
      * @return self New instance
      */
-    public function prepend(BitStringInterface $other): self
+    public function prepend(BitStringInterface|string $other): self
     {
+        if (is_string($other)) {
+            return new self($other.$this->bits);
+        }
+
         return new self($other->toString().$this->bits);
     }
 
     /**
      * Append another BitString to the end.
      *
-     * @param BitStringInterface $other BitString to append
+     * @param BitStringInterface|string $other BitString or string to append
      *
      * @return self New instance
      */
-    public function append(BitStringInterface $other): self
+    public function append(BitStringInterface|string $other): self
     {
+        if (is_string($other)) {
+            return new self($this->bits.$other);
+        }
+
         return new self($this->bits.$other->toString());
     }
 }

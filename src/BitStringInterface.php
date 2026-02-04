@@ -7,7 +7,7 @@ namespace Guillaumetissier\BitString;
 /**
  * Interface for bit string implementations.
  */
-interface BitStringInterface
+interface BitStringInterface extends \Stringable
 {
     /**
      * Get the bit at the specified index.
@@ -120,32 +120,32 @@ interface BitStringInterface
     public function popCount(): int;
 
     /**
-     * Prepend another BitString to the beginning.
+     * Prepend another BitString or string to the beginning.
      * Note: Returns new instance for immutable, same instance for mutable.
      *
-     * @param self $other BitString to prepend
+     * @param self|string $other BitString to prepend
      */
-    public function prepend(self $other): self;
+    public function prepend(self|string $other): self;
 
     /**
-     * Append another BitString to the end.
+     * Append another BitString or string to the end.
      * Note: Returns new instance for immutable, same instance for mutable.
      *
-     * @param self $other BitString to append
+     * @param self|string $other BitString to append
      */
-    public function append(self $other): self;
+    public function append(self|string $other): self;
 
     /**
-     * Check if this BitString equals another.
+     * Check if this BitString equals another or string.
+     *
+     * @param self|string $other BitString or string to compare to
      */
-    public function equals(self $other): bool;
+    public function equals(self|string $other): bool;
 
     /**
      * Get the internal binary string representation.
      */
     public function toString(): string;
-
-    // Extraction methods
 
     /**
      * Extract a sub-sequence of bits starting at a given position.
@@ -199,9 +199,4 @@ interface BitStringInterface
      * @throws \OutOfBoundsException     If the codeword index is out of bounds
      */
     public function codeword(int $index, int $wordLength): self;
-
-    /**
-     * Convert to string representation (binary format).
-     */
-    public function __toString(): string;
 }

@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Guillaumetissier\BitString;
 
-use InvalidArgumentException;
-
 /**
  * Mutable representation of a string of bits (0s and 1s).
  */
@@ -15,8 +13,8 @@ final class BitString extends AbstractBitString
      * Create a BitString from a binary string.
      *
      * @param string $binary Binary string (e.g., "10110101")
-     * @return static
-     * @throws InvalidArgumentException If the string contains non-binary characters
+     *
+     * @throws \InvalidArgumentException If the string contains non-binary characters
      */
     public static function fromString(string $binary): static
     {
@@ -25,8 +23,6 @@ final class BitString extends AbstractBitString
 
     /**
      * Create an empty BitString.
-     *
-     * @return self
      */
     public static function empty(): self
     {
@@ -37,8 +33,8 @@ final class BitString extends AbstractBitString
      * Create a BitString with all bits set to 0.
      *
      * @param int $length Number of bits
-     * @return self
-     * @throws InvalidArgumentException If length is negative
+     *
+     * @throws \InvalidArgumentException If length is negative
      */
     public static function zeros(int $length): self
     {
@@ -51,8 +47,8 @@ final class BitString extends AbstractBitString
      * Create a BitString with all bits set to 1.
      *
      * @param int $length Number of bits
-     * @return self
-     * @throws InvalidArgumentException If length is negative
+     *
+     * @throws \InvalidArgumentException If length is negative
      */
     public static function ones(int $length): self
     {
@@ -70,7 +66,7 @@ final class BitString extends AbstractBitString
      * @return self Returns $this for chaining
      *
      * @throws \OutOfBoundsException     If index is out of bounds
-     * @throws InvalidArgumentException If value is not 0 or 1
+     * @throws \InvalidArgumentException If value is not 0 or 1
      */
     public function set(int $index, int $value): self
     {
@@ -79,7 +75,7 @@ final class BitString extends AbstractBitString
         }
 
         if (0 !== $value && 1 !== $value) {
-            throw new InvalidArgumentException('Value must be 0 or 1');
+            throw new \InvalidArgumentException('Value must be 0 or 1');
         }
 
         $this->bits[$index] = (string) $value;
@@ -104,7 +100,7 @@ final class BitString extends AbstractBitString
      *
      * @return self Returns $this for chaining
      *
-     * @throws InvalidArgumentException If bit strings have different lengths
+     * @throws \InvalidArgumentException If bit strings have different lengths
      */
     public function and(BitStringInterface $other): self
     {
@@ -127,7 +123,7 @@ final class BitString extends AbstractBitString
      *
      * @return self Returns $this for chaining
      *
-     * @throws InvalidArgumentException If bit strings have different lengths
+     * @throws \InvalidArgumentException If bit strings have different lengths
      */
     public function or(BitStringInterface $other): self
     {
@@ -150,7 +146,7 @@ final class BitString extends AbstractBitString
      *
      * @return self Returns $this for chaining
      *
-     * @throws InvalidArgumentException If bit strings have different lengths
+     * @throws \InvalidArgumentException If bit strings have different lengths
      */
     public function xor(BitStringInterface $other): self
     {
@@ -267,13 +263,17 @@ final class BitString extends AbstractBitString
     /**
      * Prepend another BitString to the beginning (mutates the instance).
      *
-     * @param BitStringInterface $other BitString to prepend
+     * @param BitStringInterface|string $other BitString or string to prepend
      *
      * @return self Returns $this for chaining
      */
-    public function prepend(BitStringInterface $other): self
+    public function prepend(BitStringInterface|string $other): self
     {
-        $this->bits = $other->toString().$this->bits;
+        if (is_string($other)) {
+            $this->bits = $other.$this->bits;
+        } else {
+            $this->bits = $other->toString().$this->bits;
+        }
 
         return $this;
     }
@@ -281,13 +281,17 @@ final class BitString extends AbstractBitString
     /**
      * Append another BitString to the end (mutates the instance).
      *
-     * @param BitStringInterface $other BitString to append
+     * @param BitStringInterface|string $other BitString or string to append
      *
      * @return self Returns $this for chaining
      */
-    public function append(BitStringInterface $other): self
+    public function append(BitStringInterface|string $other): self
     {
-        $this->bits .= $other->toString();
+        if (is_string($other)) {
+            $this->bits .= $other;
+        } else {
+            $this->bits .= $other->toString();
+        }
 
         return $this;
     }

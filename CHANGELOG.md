@@ -5,7 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.1.0] - 2026-02-03
+## [1.3.0] - 2026-02-04
+
+### Added
+- `BitStringInterface` now extends `Stringable` for native PHP type compatibility
+- `append()`, `prepend()`, and `equals()` now accept `string` parameters in addition to `BitStringInterface`
+
+### Changed
+- Enhanced method signatures for better ergonomics:
+    - `append(BitStringInterface|string $other): self`
+    - `prepend(BitStringInterface|string $other): self`
+    - `equals(BitStringInterface|string $other): bool`
+
+## [1.2.0] - 2026-02-03
 
 ### Added
 - Extraction methods in `AbstractBitString`: `extract()`, `slice()`, `first()`, `last()`, `codeword()`

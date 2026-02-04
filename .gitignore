@@ -2,6 +2,7 @@
 /composer.lock
 /.phpunit.cache
 /.php-cs-fixer.cache
+/.phpunit.result.cache
 /phpunit.xml
 /.idea/
 /.vscode/
