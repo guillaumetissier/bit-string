@@ -261,7 +261,7 @@ final class BitString extends AbstractBitString
     }
 
     /**
-     * Prepend another BitString to the beginning (mutates the instance).
+     * Prepend another BitString or string to the beginning (mutates the instance).
      *
      * @param BitStringInterface|string $other BitString or string to prepend
      *
@@ -270,6 +270,7 @@ final class BitString extends AbstractBitString
     public function prepend(BitStringInterface|string $other): self
     {
         if (is_string($other)) {
+            $this->validate($other);
             $this->bits = $other.$this->bits;
         } else {
             $this->bits = $other->toString().$this->bits;
@@ -279,7 +280,7 @@ final class BitString extends AbstractBitString
     }
 
     /**
-     * Append another BitString to the end (mutates the instance).
+     * Append another BitString or string to the end (mutates the instance).
      *
      * @param BitStringInterface|string $other BitString or string to append
      *
@@ -288,6 +289,7 @@ final class BitString extends AbstractBitString
     public function append(BitStringInterface|string $other): self
     {
         if (is_string($other)) {
+            $this->validate($other);
             $this->bits .= $other;
         } else {
             $this->bits .= $other->toString();

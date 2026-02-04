@@ -255,6 +255,8 @@ final class BitStringImmutable extends AbstractBitString
     public function prepend(BitStringInterface|string $other): self
     {
         if (is_string($other)) {
+            $this->validate($other);
+
             return new self($other.$this->bits);
         }
 
@@ -271,6 +273,8 @@ final class BitStringImmutable extends AbstractBitString
     public function append(BitStringInterface|string $other): self
     {
         if (is_string($other)) {
+            $this->validate($other);
+
             return new self($this->bits.$other);
         }
 

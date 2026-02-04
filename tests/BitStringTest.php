@@ -20,9 +20,7 @@ class BitStringTest extends TestCase
         $bits = BitString::fromString('1011');
         $result = $bits->set(1, 1);
 
-        // Returns same instance
         $this->assertSame($bits, $result);
-        // Instance is mutated
         $this->assertEquals('1111', $bits->toString());
     }
 
@@ -41,9 +39,7 @@ class BitStringTest extends TestCase
 
         $result = $a->and($b);
 
-        // Returns same instance
         $this->assertSame($a, $result);
-        // Instance is mutated
         $this->assertEquals('1000', $a->toString());
     }
 
@@ -112,13 +108,44 @@ class BitStringTest extends TestCase
         $this->assertEquals('110101', $bits->toString());
     }
 
+    public function testPrependString(): void
+    {
+        $bits = BitString::fromString('1011');
+        $bits->prepend('00');
+
+        $this->assertEquals('001011', $bits->toString());
+    }
+
+    public function testPrependStringThrowsException(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        $bits = BitString::fromString('0101');
+        $bits->prepend('23');
+    }
+
     public function testAppendMutatesInstance(): void
     {
         $bits = BitString::fromString('1011');
-        $suffix = BitString::fromString('00');
-        $bits->append($suffix);
+        $bits->append(BitString::fromString('00'));
 
         $this->assertEquals('101100', $bits->toString());
+    }
+
+    public function testAppendString(): void
+    {
+        $bits = BitString::fromString('1011');
+        $bits->append('00');
+
+        $this->assertEquals('101100', $bits->toString());
+    }
+
+    public function testAppendStringThrowsException(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        $bits = BitString::fromString('0101');
+        $bits->append('67');
     }
 
     public function testChainedOperations(): void
@@ -136,6 +163,7 @@ class BitStringTest extends TestCase
     {
         $mutable = BitString::fromString('1100');
         $mutable->not();
+
         $this->assertEquals('0011', $mutable->toString());
     }
 

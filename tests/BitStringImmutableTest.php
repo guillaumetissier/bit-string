@@ -128,8 +128,8 @@ class BitStringImmutableTest extends TestCase
     {
         $bits = BitStringImmutable::fromString('1011');
         $newBits = $bits->set(1, 1);
+
         $this->assertEquals('1111', $newBits->toString());
-        // Original unchanged
         $this->assertEquals('1011', $bits->toString());
     }
 
@@ -144,20 +144,22 @@ class BitStringImmutableTest extends TestCase
     {
         $bits = BitStringImmutable::fromString('1011');
         $newBits = $bits->flip(1);
+
         $this->assertEquals('1111', $newBits->toString());
-        // Original unchanged
         $this->assertEquals('1011', $bits->toString());
     }
 
     public function testLength(): void
     {
         $bits = BitStringImmutable::fromString('10110101');
+
         $this->assertEquals(8, $bits->length());
     }
 
     public function testBitCount(): void
     {
         $bits = BitStringImmutable::fromString('10110101');
+
         $this->assertEquals(8, $bits->bitCount());
         $this->assertEquals($bits->length(), $bits->bitCount());
     }
@@ -167,8 +169,8 @@ class BitStringImmutableTest extends TestCase
         $a = BitStringImmutable::fromString('1100');
         $b = BitStringImmutable::fromString('1010');
         $result = $a->and($b);
+
         $this->assertEquals('1000', $result->toString());
-        // Originals unchanged
         $this->assertEquals('1100', $a->toString());
         $this->assertEquals('1010', $b->toString());
     }
@@ -178,6 +180,7 @@ class BitStringImmutableTest extends TestCase
         $a = BitStringImmutable::fromString('1100');
         $b = BitStringImmutable::fromString('1010');
         $result = $a->or($b);
+
         $this->assertEquals('1110', $result->toString());
     }
 
@@ -186,6 +189,7 @@ class BitStringImmutableTest extends TestCase
         $a = BitStringImmutable::fromString('1100');
         $b = BitStringImmutable::fromString('1010');
         $result = $a->xor($b);
+
         $this->assertEquals('0110', $result->toString());
     }
 
@@ -193,8 +197,8 @@ class BitStringImmutableTest extends TestCase
     {
         $bits = BitStringImmutable::fromString('1100');
         $result = $bits->not();
+
         $this->assertEquals('0011', $result->toString());
-        // Original unchanged
         $this->assertEquals('1100', $bits->toString());
     }
 
@@ -226,7 +230,7 @@ class BitStringImmutableTest extends TestCase
         $this->assertEquals('01101101', $result->toString());
     }
 
-    public function testPopcount(): void
+    public function testPopCount(): void
     {
         $bits = BitStringImmutable::fromString('10110101');
         $this->assertEquals(5, $bits->popCount());
@@ -239,9 +243,25 @@ class BitStringImmutableTest extends TestCase
         $result = $bits->prepend($prefix);
 
         $this->assertEquals('110101', $result->toString());
-        // Originals unchanged
         $this->assertEquals('0101', $bits->toString());
         $this->assertEquals('11', $prefix->toString());
+    }
+
+    public function testPrependString(): void
+    {
+        $bits = BitStringImmutable::fromString('0101');
+        $result = $bits->prepend('11');
+
+        $this->assertEquals('110101', $result->toString());
+        $this->assertEquals('0101', $bits->toString());
+    }
+
+    public function testPrependStringThrowsException(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        $bits = BitStringImmutable::fromString('0101');
+        $bits->prepend('AB');
     }
 
     public function testAppend(): void
@@ -251,9 +271,25 @@ class BitStringImmutableTest extends TestCase
         $result = $bits->append($suffix);
 
         $this->assertEquals('101100', $result->toString());
-        // Originals unchanged
         $this->assertEquals('1011', $bits->toString());
         $this->assertEquals('00', $suffix->toString());
+    }
+
+    public function testAppendString(): void
+    {
+        $bits = BitStringImmutable::fromString('1011');
+        $result = $bits->append('00');
+
+        $this->assertEquals('101100', $result->toString());
+        $this->assertEquals('1011', $bits->toString());
+    }
+
+    public function testAppendStringThrowsException(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        $bits = BitStringImmutable::fromString('0101');
+        $bits->append('AB');
     }
 
     public function testChainedOperations(): void

@@ -209,13 +209,14 @@ abstract class AbstractBitString implements BitStringInterface
     }
 
     /**
-     * Validate that all characters are 0 or 1.
+     * Validate that the given string contains only 0 or 1.
      *
      * @throws \InvalidArgumentException
      */
-    protected function validate(): void
+    protected function validate(?string $binaryString = null): void
     {
-        if ('' !== $this->bits && !preg_match('/^[01]+$/', $this->bits)) {
+        $bits = null === $binaryString ? $this->bits : $binaryString;
+        if ('' !== $bits && !preg_match('/^[01]+$/', $bits)) {
             throw new \InvalidArgumentException('Binary string must contain only 0 and 1');
         }
     }
