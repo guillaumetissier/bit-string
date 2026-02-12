@@ -58,16 +58,16 @@ final class CodewordConverter implements ConverterInterface
      *
      * @return array<string>
      */
-    public function fromBitString(BitStringInterface $bits): array
+    public function fromBitString(BitStringInterface $bitString): array
     {
         if ($this->wordLength < 1) {
             throw new \InvalidArgumentException('Word length must be at least 1');
         }
 
-        $binary = $bits->toString();
+        $binary = $bitString->toString();
         $chunks = str_split($binary, $this->wordLength);
 
-        if ($this->pad && !empty($chunks)) {
+        if ($this->pad) {
             $lastKey = array_key_last($chunks);
             if (strlen($chunks[$lastKey]) < $this->wordLength) {
                 $chunks[$lastKey] = str_pad($chunks[$lastKey], $this->wordLength, '0');

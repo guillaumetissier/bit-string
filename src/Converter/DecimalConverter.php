@@ -44,9 +44,9 @@ final class DecimalConverter implements ConverterInterface
     /**
      * Convert a BitString to a decimal number.
      */
-    public function fromBitString(BitStringInterface $bits): int
+    public function fromBitString(BitStringInterface $bitString): int
     {
-        return (int) bindec($bits->toString());
+        return (int) bindec($bitString->toString());
     }
 
     /**

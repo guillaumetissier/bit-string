@@ -44,9 +44,9 @@ final class HexConverter implements ConverterInterface
     /**
      * Convert a BitString to a hexadecimal string.
      */
-    public function fromBitString(BitStringInterface $bits): string
+    public function fromBitString(BitStringInterface $bitString): string
     {
-        $binary = $bits->toString();
+        $binary = $bitString->toString();
 
         // Pad to multiple of 4
         $padding = (4 - (strlen($binary) % 4)) % 4;

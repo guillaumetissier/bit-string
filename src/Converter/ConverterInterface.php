@@ -30,7 +30,7 @@ interface ConverterInterface
     /**
      * Convert a BitString to a value.
      *
-     * @param BitStringInterface $bits BitString to convert
+     * @param BitStringInterface $bitString BitString to convert
      */
-    public function fromBitString(BitStringInterface $bits): mixed;
+    public function fromBitString(BitStringInterface $bitString): mixed;
 }

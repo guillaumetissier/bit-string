@@ -48,8 +48,8 @@ final class BinaryConverter implements ConverterInterface
     /**
      * Convert a BitString to a binary string.
      */
-    public function fromBitString(BitStringInterface $bits): string
+    public function fromBitString(BitStringInterface $bitString): string
     {
-        return $bits->toString();
+        return $bitString->toString();
     }
 }
