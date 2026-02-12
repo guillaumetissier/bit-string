@@ -57,8 +57,10 @@ final class BitsConverter implements ConverterInterface
             throw new \InvalidArgumentException('Value must be an array');
         }
 
-        if (!array_all($value, static fn ($v): bool => is_scalar($v))) {
-            throw new \InvalidArgumentException('Value must be an array of scalar values');
+        foreach ($value as $bit) {
+            if (!is_scalar($bit)) {
+                throw new \InvalidArgumentException('Value must be an array of scalar values');
+            }
         }
 
         return implode('', array_map(static fn (mixed $b): string => is_scalar($b) ? (string) intval($b) : '', $value));
