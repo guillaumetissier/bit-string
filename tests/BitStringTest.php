@@ -507,4 +507,23 @@ class BitStringTest extends TestCase
 
         $this->assertTrue($cw->equals($extracted));
     }
+
+    /**
+     * @dataProvider dataPad
+     */
+    public function testPad(BitString $bitString, int $length, bool $prepend, string $expected): void
+    {
+        $paddedBitString = $bitString->pad($length, $prepend);
+        $this->assertInstanceOf(BitString::class, $paddedBitString);
+        $this->assertSame($bitString, $paddedBitString);
+        $this->assertEquals($expected, $paddedBitString->toString());
+    }
+
+    public static function dataPad(): \Generator
+    {
+        yield [BitString::fromString('1010101'), -1, true, '1010101'];
+        yield [BitString::fromString('1010101'), 6, true, '1010101'];
+        yield [BitString::ones(7), 10, true, '0001111111'];
+        yield [BitString::ones(8), 10, false, '1111111100'];
+    }
 }

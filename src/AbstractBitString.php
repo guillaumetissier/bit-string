@@ -208,6 +208,82 @@ abstract class AbstractBitString implements BitStringInterface
         return static::fromString(substr($this->bits, $position, $actualLength));
     }
 
+    protected function calculateAnd(BitStringInterface|string $other): string
+    {
+        if (is_string($other)) {
+            $this->validate($other);
+            $otherBits = $other;
+        } else {
+            $otherBits = $other->toString();
+        }
+
+        $this->assertSameLength($otherBits);
+
+        $result = '';
+        $length = strlen($this->bits);
+        for ($i = 0; $i < $length; ++$i) {
+            $result .= ('1' === $this->bits[$i] && '1' === $otherBits[$i]) ? '1' : '0';
+        }
+
+        return $result;
+    }
+
+    protected function calculateOr(BitStringInterface|string $other): string
+    {
+        if (is_string($other)) {
+            $this->validate($other);
+            $otherBits = $other;
+        } else {
+            $otherBits = $other->toString();
+        }
+
+        $this->assertSameLength($otherBits);
+
+        $result = '';
+        $length = strlen($this->bits);
+        for ($i = 0; $i < $length; ++$i) {
+            $result .= ('1' === $this->bits[$i] || '1' === $otherBits[$i]) ? '1' : '0';
+        }
+
+        return $result;
+    }
+
+    protected function calculateXor(BitStringInterface|string $other): string
+    {
+        if (is_string($other)) {
+            $this->validate($other);
+            $otherBits = $other;
+        } else {
+            $otherBits = $other->toString();
+        }
+
+        $this->assertSameLength($otherBits);
+
+        $result = '';
+        $length = strlen($this->bits);
+        for ($i = 0; $i < $length; ++$i) {
+            $result .= ($this->bits[$i] !== $otherBits[$i]) ? '1' : '0';
+        }
+
+        return $result;
+    }
+
+    protected function calculateNot(): string
+    {
+        $result = '';
+        $length = strlen($this->bits);
+        for ($i = 0; $i < $length; ++$i) {
+            $result .= '0' === $this->bits[$i] ? '1' : '0';
+        }
+
+        return $result;
+    }
+
+    protected function createPaddedString(int $length, bool $prepend): string
+    {
+        return str_pad($this->bits, $length, '0', $prepend ? STR_PAD_LEFT : STR_PAD_RIGHT);
+    }
+
     /**
      * Validate that the given string contains only 0 or 1.
      *
@@ -226,9 +302,13 @@ abstract class AbstractBitString implements BitStringInterface
      *
      * @throws \InvalidArgumentException
      */
-    protected function assertSameLength(BitStringInterface $other): void
+    protected function assertSameLength(BitStringInterface|string $other): void
     {
-        if (strlen($this->bits) !== $other->length()) {
+        if (is_string($other)) {
+            if (strlen($this->bits) !== strlen($other)) {
+                throw new \InvalidArgumentException('Other expected string');
+            }
+        } elseif (strlen($this->bits) !== $other->length()) {
             throw new \InvalidArgumentException('Bit strings must have the same length');
         }
     }

@@ -56,7 +56,7 @@ interface BitStringInterface extends \Stringable
      *
      * @throws \InvalidArgumentException If bit strings have different lengths
      */
-    public function and(self $other): self;
+    public function and(BitStringInterface|string $other): self;
 
     /**
      * Perform bitwise OR operation.
@@ -64,7 +64,7 @@ interface BitStringInterface extends \Stringable
      *
      * @throws \InvalidArgumentException If bit strings have different lengths
      */
-    public function or(self $other): self;
+    public function or(BitStringInterface|string $other): self;
 
     /**
      * Perform bitwise XOR operation.
@@ -72,7 +72,7 @@ interface BitStringInterface extends \Stringable
      *
      * @throws \InvalidArgumentException If bit strings have different lengths
      */
-    public function xor(self $other): self;
+    public function xor(BitStringInterface|string $other): self;
 
     /**
      * Perform bitwise NOT operation.
@@ -125,7 +125,7 @@ interface BitStringInterface extends \Stringable
      *
      * @param self|string $other BitString to prepend
      */
-    public function prepend(self|string $other): self;
+    public function prepend(BitStringInterface|string $other): self;
 
     /**
      * Append another BitString or string to the end.
@@ -133,14 +133,23 @@ interface BitStringInterface extends \Stringable
      *
      * @param self|string $other BitString to append
      */
-    public function append(self|string $other): self;
+    public function append(BitStringInterface|string $other): self;
 
     /**
      * Check if this BitString equals another or string.
      *
      * @param self|string $other BitString or string to compare to
      */
-    public function equals(self|string $other): bool;
+    public function equals(BitStringInterface|string $other): bool;
+
+    /**
+     * pad the bit string with 0s.
+     *
+     * @param int  $length  if the value of pad_length is negative, less than,
+     *                      or equal to the length of the input string, no padding takes place
+     * @param bool $prepend if true, 0s are prepended to the bit string, else they are appended
+     */
+    public function pad(int $length, bool $prepend = true): self;
 
     /**
      * Get the internal binary string representation.

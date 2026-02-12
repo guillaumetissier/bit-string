@@ -103,18 +103,9 @@ final class BitStringImmutable extends AbstractBitString
      *
      * @throws \InvalidArgumentException If bit strings have different lengths
      */
-    public function and(BitStringInterface $other): self
+    public function and(BitStringInterface|string $other): self
     {
-        $this->assertSameLength($other);
-
-        $result = '';
-        $length = strlen($this->bits);
-        $otherBits = $other->toString();
-        for ($i = 0; $i < $length; ++$i) {
-            $result .= ('1' === $this->bits[$i] && '1' === $otherBits[$i]) ? '1' : '0';
-        }
-
-        return new self($result);
+        return new self($this->calculateAnd($other));
     }
 
     /**
@@ -124,18 +115,9 @@ final class BitStringImmutable extends AbstractBitString
      *
      * @throws \InvalidArgumentException If bit strings have different lengths
      */
-    public function or(BitStringInterface $other): self
+    public function or(BitStringInterface|string $other): self
     {
-        $this->assertSameLength($other);
-
-        $result = '';
-        $length = strlen($this->bits);
-        $otherBits = $other->toString();
-        for ($i = 0; $i < $length; ++$i) {
-            $result .= ('1' === $this->bits[$i] || '1' === $otherBits[$i]) ? '1' : '0';
-        }
-
-        return new self($result);
+        return new self($this->calculateOr($other));
     }
 
     /**
@@ -145,18 +127,9 @@ final class BitStringImmutable extends AbstractBitString
      *
      * @throws \InvalidArgumentException If bit strings have different lengths
      */
-    public function xor(BitStringInterface $other): self
+    public function xor(BitStringInterface|string $other): self
     {
-        $this->assertSameLength($other);
-
-        $result = '';
-        $length = strlen($this->bits);
-        $otherBits = $other->toString();
-        for ($i = 0; $i < $length; ++$i) {
-            $result .= ($this->bits[$i] !== $otherBits[$i]) ? '1' : '0';
-        }
-
-        return new self($result);
+        return new self($this->calculateXor($other));
     }
 
     /**
@@ -166,13 +139,7 @@ final class BitStringImmutable extends AbstractBitString
      */
     public function not(): self
     {
-        $result = '';
-        $length = strlen($this->bits);
-        for ($i = 0; $i < $length; ++$i) {
-            $result .= '0' === $this->bits[$i] ? '1' : '0';
-        }
-
-        return new self($result);
+        return new self($this->calculateNot());
     }
 
     /**
@@ -279,5 +246,10 @@ final class BitStringImmutable extends AbstractBitString
         }
 
         return new self($this->bits.$other->toString());
+    }
+
+    public function pad(int $length, bool $prepend = true): BitStringInterface
+    {
+        return new self($this->createPaddedString($length, $prepend));
     }
 }

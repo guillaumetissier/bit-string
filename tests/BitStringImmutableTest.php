@@ -374,4 +374,23 @@ class BitStringImmutableTest extends TestCase
         $this->assertInstanceOf(BitStringImmutable::class, $result);
         $this->assertEquals('1011', $result->toString());
     }
+
+    /**
+     * @dataProvider dataPad
+     */
+    public function testPad(BitStringImmutable $bitString, int $length, bool $prepend, string $expected): void
+    {
+        $paddedBitString = $bitString->pad($length, $prepend);
+        $this->assertInstanceOf(BitStringImmutable::class, $paddedBitString);
+        $this->assertNotSame($bitString, $paddedBitString);
+        $this->assertEquals($expected, $paddedBitString->toString());
+    }
+
+    public static function dataPad(): \Generator
+    {
+        yield [BitStringImmutable::fromString('1010101'), -1, true, '1010101'];
+        yield [BitStringImmutable::fromString('1010101'), 6, true, '1010101'];
+        yield [BitStringImmutable::ones(7), 10, true, '0001111111'];
+        yield [BitStringImmutable::ones(8), 10, false, '1111111100'];
+    }
 }
